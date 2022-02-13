@@ -4,7 +4,6 @@ from flask import Response, make_response, redirect, request, url_for
 from flask.views import MethodView, View
 
 from flask_saml2.exceptions import CannotHandleAssertion, UserNotAuthorized
-
 from . import sp
 
 logger = logging.getLogger(__name__)
@@ -24,12 +23,13 @@ class Login(SAML2View):
     """
     Log in to this SP using SAML.
     """
+
     def get(self):
         handler = self.sp.get_default_idp_handler()
         login_next = self.sp.get_login_return_url()
         if handler:
             return redirect(url_for('.login_idp', entity_id=handler.entity_id, next=login_next,
-                            _scheme=self.sp.get_scheme(), _external=True))
+                                    _scheme=self.sp.get_scheme(), _external=True))
         return self.sp.render_template(
             'flask_saml2_sp/choose_idp.html',
             login_next=login_next,
@@ -40,6 +40,7 @@ class LoginIdP(SAML2View):
     """
     Log in using a specific IdP.
     """
+
     def get(self):
         entity_id = request.args['entity_id']
         handler = self.sp.get_idp_handler_by_entity_id(entity_id)
@@ -52,6 +53,7 @@ class Logout(SAML2View):
     Initiates a logout with the IdP used to authenticate the currently logged
     in user.
     """
+
     def post(self):
         handler = self.sp.get_idp_handler_by_current_session()
         auth_data = self.sp.get_auth_data_in_session()
@@ -67,6 +69,7 @@ class SingleLogout(SAML2View):
     """
     Logs the user out of this SP and sends them to the next logout destination.
     """
+
     def get(self):
         # TODO Verify this SLO request is valid, process it correctly, send the
         # user back to the IdP for further sign outs...
@@ -82,6 +85,7 @@ class AssertionConsumer(SAML2View):
         saml_request = request.form['SAMLResponse']
         errors = []
         if self.sp.get_acs_redirect_endpoint() is None:
+            print(request.form)
             relay_state = request.form['RelayState']
         else:
             relay_state = self.sp.make_absolute_url(self.sp.get_acs_redirect_endpoint())
@@ -105,6 +109,7 @@ class Metadata(SAML2View):
     """
     Replies with the XML metadata for this Service Provider / IdP handler pair.
     """
+
     def get(self):
         metadata = self.sp.render_template(
             'flask_saml2_sp/metadata.xml',
