@@ -206,14 +206,13 @@ class IdPHandler:
 
         parsed_url = urlparse(url)
         query_dict = dict(parse_qsl(parsed_url.query))
-        parameter_dict = {k: v for k, v in parameters}
+        parameter_dict = { k: v for k,v in parameters }
         parameter_dict.update(query_dict)
 
         if self.sp.should_sign_requests():
-            query = sign_query_parameters(self.sp.get_sp_signer(), parameters)
+            query = sign_query_parameters(self.sp.get_sp_signer(), [ (k,v) for k, v in query_dict ])
         else:
             query = urlencode(parameter_dict)
-
         url = parsed_url._replace(query=query)
         return urlunparse(url)
 
