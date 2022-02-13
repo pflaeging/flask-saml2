@@ -1,6 +1,6 @@
 import datetime
 from typing import Mapping, Optional
-from urllib.parse import urlencode
+from urllib.parse import urlencode, parse_qsl, urlparse, urlunparse
 
 import attr
 import iso8601
@@ -11,7 +11,6 @@ from flask_saml2.signing import sign_query_parameters
 from flask_saml2.types import X509
 from flask_saml2.utils import get_random_id, utcnow
 from flask_saml2.xml_templates import XmlTemplate
-
 from .parser import ResponseParser
 from .xml_templates import AuthnRequest, LogoutRequest
 
@@ -204,12 +203,19 @@ class IdPHandler:
         """
         Make a URL to the SAML IdP, signing the query parameters if required.
         """
+
+        parsed_url = urlparse(url)
+        query_dict = dict(parse_qsl(parsed_url.query))
+        parameter_dict = {k: v for k, v in parameters}
+        parameter_dict.update(query_dict)
+
         if self.sp.should_sign_requests():
             query = sign_query_parameters(self.sp.get_sp_signer(), parameters)
         else:
-            query = urlencode(parameters)
+            query = urlencode(parameter_dict)
 
-        return f'{url}?{query}'
+        url = parsed_url._replace(query=query)
+        return urlunparse(url)
 
     def decode_saml_string(self, saml_string: str) -> bytes:
         """Decode an incoming SAMLResponse into an XML string."""
