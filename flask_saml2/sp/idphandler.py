@@ -11,7 +11,6 @@ from flask_saml2.signing import sign_query_parameters
 from flask_saml2.types import X509
 from flask_saml2.utils import get_random_id, utcnow
 from flask_saml2.xml_templates import XmlTemplate
-
 from .parser import ResponseParser
 from .xml_templates import AuthnRequest, LogoutRequest
 
@@ -213,8 +212,7 @@ class IdPHandler:
         if self.sp.should_sign_requests():
             query = sign_query_parameters(self.sp.get_sp_signer(), [ (k,v) for k, v in query_dict ])
         else:
-            query = urlencode(query_dict)
-
+            query = urlencode(parameter_dict)
         url = parsed_url._replace(query=query)
         return urlunparse(url)
 
