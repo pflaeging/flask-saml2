@@ -2,7 +2,12 @@ flask-saml2
 ===========
 
 .. note::
-    **Looking for maintainers**. This project is unmaintained. The library works, or did when I last used it,
+    **This is a fork** 
+    This fixes some bugs from the original repository, and includes some open pull requests from the original repo.
+    However, I cannot take over permanent maintenance of the repo 
+
+.. note::
+    **(The Orginal Repository) Looking for maintainers**. This project is unmaintained. The library works, or did when I last used it,
     but I no longer work on the project this was built for. If you are interested in taking over leadership
     and maintenance of this project, please get in touch.
 
