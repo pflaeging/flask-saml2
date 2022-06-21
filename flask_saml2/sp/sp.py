@@ -35,7 +35,7 @@ class ServiceProvider:
     blueprint_name = 'flask_saml2_sp'
 
     #: Set this to http or https
-    scheme = 'http'
+    scheme = 'https'
 
     #: Set these to your desired endpoints
     logout_return_endpoint = None
