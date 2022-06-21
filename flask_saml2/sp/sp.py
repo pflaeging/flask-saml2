@@ -340,7 +340,7 @@ class ServiceProvider:
     # This is unnecessary if you expect a "relay_state" parameter in the SAML request to the ACS
     def create_blueprint(self, login_endpoint='/login/', login_idp_endpoint='/login/idp/',
                          logout_endpoint='/logout/', acs_endpoint='/acs/', sls_endpoint='/sls/',
-                         metadata_endpoint='/metadata.xml', scheme='http') -> Blueprint:
+                         metadata_endpoint='/metadata.xml', scheme='https') -> Blueprint:
 
         """Create a Flask :class:`flask.Blueprint` for this Service Provider.
         """
